@@ -1,0 +1,83 @@
+﻿@model ExpensesViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container mt-3">
+    <h2 class="h4">Expenses List</h2>
+
+
+    <div class="mb-3">
+        <a asp-action="Create" class="btn btn-sm btn-success">Create New Expense</a>
+    </div>
+
+    <table class="table table-sm table-hover table-bordered">
+        <thead class="thead-light">
+            <tr>
+                <th class="text-left">Employee Name</th>
+                <th class="text-center">Date</th>
+                <th class="text-center">BE No</th>
+                <th class="text-center">Bill No</th>
+                <th class="text-center">Bill Type</th>
+                <th class="text-center">Bill Amount</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        <tbody>
+                @foreach (var expense in Model.Expenses)
+                {
+                <tr>
+                    <td class="text-center">@expense.Employee.Name</td>
+
+                    <td class="text-center">@expense.BillDate.ToString("yyyy-MM-dd")</td> <!-- Format Bill Date -->
+                    <td class="text-center">@expense.BEno</td>
+                    <td class="text-center">@expense.FileNo</td>
+                    <td class="text-center">@expense.BillType</td>
+                    <td class="text-center">
+                        <a asp-action="Details" asp-route-id="@expense.Id" class="text-decoration-none text-primary">
+                                @(expense.BillAmount < 0 ? $"({Math.Abs(expense.BillAmount):N2})" : $"{expense.BillAmount:N2}")
+                        </a>
+                    </td>
+                    <td class="text-center">
+                        <a asp-action="Delete" asp-route-id="@expense.Id" class="text-danger">Delete</a>
+                    </td>
+                </tr>
+                }
+        </tbody>
+
+    </table>
+
+<!-- Pagination controls -->
+    <nav>
+        <ul class="pagination pagination-sm justify-content-end">
+        @if (Model.PageNumber > 1)
+        {
+                    <li class="page-item">
+                        <a asp-action="Index" asp-route-pageNumber="1" class="page-link">&lt;</a>
+                    </li>
+        }
+
+        @for (int i = Math.Max(1, Model.PageNumber - 2); i <= Math.Min(Model.TotalPages, Model.PageNumber + 2); i++)
+        {
+                    <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                        <a asp-action="Index" asp-route-pageNumber="@i" class="page-link">@i</a>
+                    </li>
+        }
+
+        @if (Model.PageNumber < Model.TotalPages)
+        {
+                    <li class="page-item">
+                        <a asp-action="Index" asp-route-pageNumber="@(Model.PageNumber + 1)" class="page-link">Next</a>
+                    </li>
+        }
+
+        @if (Model.PageNumber < Model.TotalPages - 1)
+        {
+                    <li class="page-item">
+                        <a asp-action="Index" asp-route-pageNumber="@Model.TotalPages" class="page-link">Last</a>
+                    </li>
+        }
+        </ul>
+    </nav>
+</div>

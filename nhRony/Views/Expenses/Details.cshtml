@@ -1,0 +1,69 @@
+﻿@model ClearingAndForwarding.Models.Expenses
+
+<div>
+    <h4>Expense Info</h4>
+    <table class="table">
+        <tr>
+            <td><strong>Employee</strong></td>
+            <td>@Model.Employee?.Name</td> <!-- Use null-conditional operator to avoid NullReferenceException -->
+        </tr>
+        <tr>
+            <td><strong>File Number</strong></td>
+            <td>@Model.FileNo</td>
+        </tr>
+        <tr>
+            <td><strong>Bill Type</strong></td>
+            <td>@Model.BillType</td>
+        </tr>
+        <tr>
+            <td><strong>Bill Amount</strong></td>
+            <td>@Model.BillAmount.ToString("N2")</td>
+        </tr>
+        <tr>
+            <td><strong>Bill Date</strong></td>
+            <td>@Model.BillDate.ToString("yyyy-MM-dd")</td>
+        </tr>
+    </table>
+</div>
+
+<h4>Expense Details</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Expense Head</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            decimal totalAmount = 0;
+            var addedExpenseHeads = new HashSet<int>(); // Track added ExpenseHeads to prevent duplicates
+        }
+
+        @foreach (var detail in Model.ExpenseDetails)
+        {
+            // Skip specific ExpenseHeadId values
+            if (!new[] { 1, 2, 58, 59, 60 }.Contains(detail.ExpenseHeadId))
+            {
+                if (addedExpenseHeads.Add(detail.ExpenseHeadId)) // Add returns false if already exists
+                {
+                    decimal amount = detail.Amount;
+                    totalAmount += amount;
+
+                    <tr>
+                        <td>@detail.ExpenseHead?.ExpenseName</td> <!-- Use null-conditional operator -->
+                        <td>@amount.ToString("N2")</td>
+                    </tr>
+                }
+            }
+        }
+
+
+        <tr style="font-weight: bold;">
+            <td>Total</td>
+            <td>@totalAmount.ToString("N2")</td>
+        </tr>
+    </tbody>
+</table>
+
+<a asp-action="Index">Back to List</a>
