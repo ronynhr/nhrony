@@ -1,0 +1,76 @@
+﻿@model BEdetailsViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<p>
+    <a asp-action="Create">Create New</a>
+    <a asp-action="Import">Import</a>
+</p>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.BEdetails.FirstOrDefault().FileNo)</th>
+            <th>@Html.DisplayNameFor(model => model.BEdetails.FirstOrDefault().BENo)</th>
+            <th>@Html.DisplayNameFor(model => model.BEdetails.FirstOrDefault().UnitCode)</th>
+            <th>@Html.DisplayNameFor(model => model.BEdetails.FirstOrDefault().BEDate)</th>
+            <th>@Html.DisplayNameFor(model => model.BEdetails.FirstOrDefault().ItemName)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.BEdetails)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.FileNo)</td>
+                <td>@Html.DisplayFor(modelItem => item.BENo)</td>
+                <td>@Html.DisplayFor(modelItem => item.UnitCode)</td>
+                <td>@Html.DisplayFor(modelItem => item.BEDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.ItemName)</td>
+                <!-- Add other columns similarly -->
+                <td>
+                    <a asp-action="upsert" asp-route-id="@item.Id">Edit</a>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<!-- Pagination Controls -->
+<nav>
+    <ul class="pagination pagination-sm justify-content-end">
+        @if (Model.PageNumber > 1)
+        {
+            <li class="page-item">
+                <a asp-action="Index" asp-route-pageNumber="1" asp-route-searchString="@Model.SearchString" class="page-link">First</a>
+            </li>
+            <li class="page-item">
+                <a asp-action="Index" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-searchString="@Model.SearchString" class="page-link">&lt;</a>
+            </li>
+        }
+
+        @for (int i = Math.Max(1, Model.PageNumber - 2); i <= Math.Min(Model.TotalPages, Model.PageNumber + 2); i++)
+        {
+            <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                <a asp-action="Index" asp-route-pageNumber="@i" asp-route-searchString="@Model.SearchString" class="page-link">@i</a>
+            </li>
+        }
+
+        @if (Model.PageNumber < Model.TotalPages)
+        {
+            <li class="page-item">
+                <a asp-action="Index" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-searchString="@Model.SearchString" class="page-link">&gt;</a>
+            </li>
+        }
+
+        @if (Model.PageNumber < Model.TotalPages - 1)
+        {
+            <li class="page-item">
+                <a asp-action="Index" asp-route-pageNumber="@Model.TotalPages" asp-route-searchString="@Model.SearchString" class="page-link">Last</a>
+            </li>
+        }
+    </ul>
+</nav>

@@ -1,0 +1,255 @@
+﻿@model ClearingAndForwarding.Models.Quotation
+@{
+    ViewData["Title"] = Model?.Id == 0 ? "Create" : "Edit";
+    bool isReadOnly = ViewBag.IsReadOnly ?? false;
+}
+
+<style>
+    .col-label {
+        width: 140px;
+        white-space: nowrap;
+    }
+
+    .input-label {
+        width: 220px;
+        white-space: nowrap;
+    }
+</style>
+
+<h4 class="text-muted">@ViewData["Title"] Quotation</h4>
+<hr />
+
+@if (isReadOnly)
+{
+    <div class="alert alert-info d-flex align-items-center" role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" fill="currentColor" role="img" aria-label="Info:">
+            <use xlink:href="#info-fill" />
+        </svg>
+        <div>This quotation is currently in <strong>view-only</strong> mode. Click <strong>Edit</strong> to make changes.</div>
+    </div>
+}
+
+<form asp-action="Upsert" method="post" class="p-3 border rounded shadow-sm bg-light" id="quotationForm">
+    <div class="table-responsive">
+        <table class="table table-bordered table-sm align-middle mb-3">
+            <tbody>
+                <tr>
+                    <td class="py-1 col-label">Expense Head:</td>
+                    <td class="py-1 input-label">
+                        <select asp-for="ExpenseHeadID" asp-items="ViewBag.ExpenseHeadID"
+                                class="form-control form-control-sm"
+                                disabled="@(isReadOnly ? "disabled" : null)"></select>
+                        <span asp-validation-for="ExpenseHeadID" class="text-danger small"></span>
+                    </td>
+
+                    <td class="py-1 col-label">Cost Base:</td>
+                    <td class="py-1">
+                        <select asp-for="ItemName" id="costBaseSelect" asp-items="ViewBag.CostBaseOptions"
+                                class="form-control form-control-sm"
+                                disabled="@(isReadOnly ? "disabled" : null)"></select>
+                        <span asp-validation-for="ItemName" class="text-danger small"></span>
+                    </td>
+
+                    <td class="py-1 col-label">Item Category:</td>
+                    <td class="py-1">
+                        <select asp-for="ItemCategoryId" asp-items="ViewBag.ItemCategoryId"
+                                class="form-control form-control-sm"
+                                disabled="@(isReadOnly ? "disabled" : null)"></select>
+                        <span asp-validation-for="ItemCategoryId" class="text-danger small"></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="py-1 col-label">Effective Date:</td>
+                    <td class="py-1">
+                        <input asp-for="EffectiveDate" type="date" class="form-control form-control-sm"
+                               disabled="@(isReadOnly ? "disabled" : null)" />
+                        <span asp-validation-for="EffectiveDate" class="text-danger small"></span>
+                    </td>
+
+                    <td class="py-1 col-label">Expire Date:</td>
+                    <td class="py-1">
+                        <input asp-for="ExpiryDate" type="date" class="form-control form-control-sm"
+                               disabled="@(isReadOnly ? "disabled" : null)" />
+                        <span asp-validation-for="ExpiryDate" class="text-danger small"></span>
+                    </td>
+
+                    <td class="py-1 col-label">Approved By:</td>
+                    <td class="py-1">
+                        <select asp-for="EmployeeId" asp-items="ViewBag.EmployeeList"
+                                class="form-control form-control-sm"
+                                disabled="@(isReadOnly ? "disabled" : null)"></select>
+                        <span asp-validation-for="EmployeeId" class="text-danger small"></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="py-1 col-label">Amount:</td>
+                    <td class="py-1">
+                        <input asp-for="Amount" id="Amount" type="text" autocomplete="off"
+                               class="form-control form-control-sm text-end"
+                               disabled="@(isReadOnly ? "disabled" : null)" />
+                        <span asp-validation-for="Amount" class="text-danger small"></span>
+                    </td>
+
+                    <td class="py-1 col-label">Remarks:</td>
+                    <td class="py-1" colspan="3">
+                        <input asp-for="Remarks" class="form-control form-control-sm"
+                               disabled="@(isReadOnly ? "disabled" : null)" />
+                        <span asp-validation-for="Remarks" class="text-danger small"></span>
+                    </td>
+                </tr>
+
+                <tr id="conditionalRow">
+                    @* RestCont *@
+                    <td class="py-1 col-label">Next Rate (Rest Cont):</td>
+                    <td class="py-1">
+                        <input asp-for="RestCont" id="RestCont" name="RestCont_display" type="text" autocomplete="off"
+                               class="form-control form-control-sm text-end"
+                               disabled="@(isReadOnly ? "disabled" : null)" />
+                        <input type="hidden" name="RestCont" id="RestContHidden" />
+                        <span asp-validation-for="RestCont" class="text-danger small"></span>
+                    </td>
+
+                    @* OCFirstCont *@
+                    <td class="py-1 col-label">On Chassis 1st:</td>
+                    <td class="py-1">
+                        <input asp-for="OCFirstCont" id="OCFirstCont" name="OCFirstCont_display" type="text" autocomplete="off"
+                               class="form-control form-control-sm text-end"
+                               disabled="@(isReadOnly ? "disabled" : null)" />
+                        <input type="hidden" name="OCFirstCont" id="OCFirstContHidden" />
+                        <span asp-validation-for="OCFirstCont" class="text-danger small"></span>
+                    </td>
+
+                    @* OCRestCont *@
+                    <td class="py-1 col-label">On Chassis Next Rate:</td>
+                    <td class="py-1">
+                        <input asp-for="OCRestCont" id="OCRestCont" name="OCRestCont_display" type="text" autocomplete="off"
+                               class="form-control form-control-sm text-end"
+                               disabled="@(isReadOnly ? "disabled" : null)" />
+                        <input type="hidden" name="OCRestCont" id="OCRestContHidden" />
+                        <span asp-validation-for="OCRestCont" class="text-danger small"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="d-flex justify-content-between mt-4 flex-wrap gap-2">
+        <div>
+            @if (!isReadOnly)
+            {
+                <button type="submit" class="btn btn-outline-primary me-2">Save</button>
+            }
+            else
+            {
+                <a asp-action="Upsert" asp-route-id="@Model.Id" class="btn btn-outline-primary me-2">Edit</a>
+            }
+
+            @if (Model?.Id > 0)
+            {
+                <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteConfirmModal">Delete</button>
+                <form id="deleteForm" method="post" asp-action="Delete" asp-route-id="@Model.Id" class="d-none">
+                    @Html.AntiForgeryToken()
+                </form>
+            }
+        </div>
+        <div>
+            <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+        </div>
+    </div>
+</form>
+
+@if (Model?.Id > 0)
+{
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-white border-0 rounded-3 shadow-sm">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title text-dark fw-bold" id="deleteConfirmLabel">Confirm Deletion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-dark">Are you sure you want to permanently delete this quotation?</div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" id="confirmDeleteBtn" class="btn btn-sm btn-danger">Yes, Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        const costBaseSelect = document.getElementById("costBaseSelect");
+        const conditionalFields = [
+            { id: "RestCont", hiddenId: "RestContHidden" },
+            { id: "OCFirstCont", hiddenId: "OCFirstContHidden" },
+            { id: "OCRestCont", hiddenId: "OCRestContHidden" }
+        ];
+
+        function toggleConditionalFields() {
+            const isPerContainer = costBaseSelect.value === "Per Container";
+
+            conditionalFields.forEach(({ id, hiddenId }) => {
+                const field = document.getElementById(id);
+                const hidden = document.getElementById(hiddenId);
+                const td = field?.closest("td");
+                const labelTd = td?.previousElementSibling;
+
+                if (field && hidden && td && labelTd) {
+                    // Show or hide label + input cell
+                    const displayStyle = isPerContainer ? "" : "none";
+                    td.style.display = displayStyle;
+                    labelTd.style.display = displayStyle;
+
+                    // When hidden, store value in hidden field for postback
+                    if (!isPerContainer) {
+                        hidden.value = field.value;
+                    }
+                }
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            toggleConditionalFields();
+            costBaseSelect.addEventListener("change", toggleConditionalFields);
+
+            // Restrict numeric input
+            function restrictNumericInput(e) {
+                const allowedKeys = ["Backspace", "Tab", "ArrowLeft", "ArrowRight", "Delete", "Home", "End"];
+                if (allowedKeys.includes(e.key)) return;
+                if (/^\d$/.test(e.key)) return;
+                if (e.key === '.' && !e.target.value.includes('.')) return;
+                e.preventDefault();
+            }
+
+            // Apply numeric restriction to fields
+            ["Amount", ...conditionalFields.map(f => f.id)].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener("keydown", restrictNumericInput);
+            });
+
+            // On submit, copy visible inputs' values to hidden inputs
+            document.getElementById("quotationForm").addEventListener("submit", () => {
+                conditionalFields.forEach(({ id, hiddenId }) => {
+                    const field = document.getElementById(id);
+                    const hidden = document.getElementById(hiddenId);
+                    if (field && hidden) {
+                        hidden.value = field.value;
+                    }
+                });
+            });
+
+            // Delete confirm button handler
+            document.getElementById("confirmDeleteBtn")?.addEventListener("click", () => {
+                document.getElementById("deleteForm")?.submit();
+            });
+
+            // Apply read-only mode if needed
+            if (@isReadOnly.ToString().ToLower()) {
+                applyReadOnlyMode("quotationForm", true);
+            }
+        });
+    </script>
+}

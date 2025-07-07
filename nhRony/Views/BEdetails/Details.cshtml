@@ -1,0 +1,209 @@
+﻿@model ClearingAndForwarding.Models.BEdetails
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div class="card">
+    <div class="card-body">
+        <h4>BEdetails</h4>
+        <hr />
+        <div class="row">
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.FileNo)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.FileNo)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.BENo)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.BENo)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.BEDate)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.BEDate)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.LCNo)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.LCNo)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.LCDate)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.LCDate)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.ItemName)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.ItemName)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.Quantity)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.Quantity)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.UOM)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.UOM)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.Currency)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.Currency)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.Amount)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.Amount)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.InvoiceNo)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.InvoiceNo)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.InvoiceDate)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.InvoiceDate)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.UnitCode)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.UnitCode)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.AssessableValue)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.AssessableValue)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.Weight)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.Weight)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.Shipper)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.Shipper)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.ArrivalDate)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.ArrivalDate)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.ODRecDate)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.ODRecDate)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.AssessmentDate)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.AssessmentDate)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.DODate)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.DODate)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.DeliveryDate)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.DeliveryDate)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.OnChassis)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.OnChassis)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.ContainerNo)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.ContainerNo)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.ContainerSize)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.ContainerSize)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.FileURL)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.FileURL)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.Remarks)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.Remarks)
+            </div>
+
+            <div class="col-sm-4">
+                <strong>@Html.DisplayNameFor(model => model.UserCode)</strong>
+            </div>
+            <div class="col-sm-8">
+                @Html.DisplayFor(model => model.UserCode)
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a class="btn btn-primary" asp-action="Edit" asp-route-id="@Model?.Id">Edit</a>
+    <a class="btn btn-secondary" asp-action="Index">Back to List</a>
+</div>

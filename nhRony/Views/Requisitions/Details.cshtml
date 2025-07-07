@@ -1,0 +1,144 @@
+﻿@model ClearingAndForwarding.Models.Requisition
+
+@{
+    var quotationAmounts = ViewData["QuotationAmounts"] as Dictionary<int, decimal>;
+    var matchingRequisitions = ViewData["MatchingRequisitions"] as List<Requisition>;
+
+    decimal totalAmount = 0;
+}
+
+<div class="container mt-5">
+    <!-- Expense Info -->
+    <div class="mb-4">
+        <h4 class="mb-3 border-bottom pb-2">Expense Information</h4>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <th>Employee Name:</th>
+                    <td>@Model.Employee?.Name</td>
+                    <th>BE Number:</th>
+                    <td>@Model.Bedetails?.BENo</td>
+                    <th>BE Date:</th>
+                    <td>@Model.Bedetails?.BEDate.ToString("dd-MMM-yyyy")</td>
+                </tr>
+                <tr>
+                    <th>LC Number:</th>
+                    <td>@Model.Bedetails?.LCNo</td>
+                    <th>LC Date:</th>
+                    <td>@Model.Bedetails?.LCDate?.ToString("dd-MMM-yyyy")</td>
+                    <th>Quantity:</th>
+                    <td>@Model.Bedetails?.Quantity @Model.Bedetails?.UOM</td>
+                </tr>
+                <tr>
+                    <th>Requisition No:</th>
+                    <td>@Model.RequisitionNo</td>
+                    <th>Requisition Date:</th>
+                    <td>@Model.RequisitionDate.ToString("dd-MMM-yyyy")</td>
+                    <th>Shipper Name:</th>
+                    <td>@Model.Bedetails?.Shipper</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Expense Details -->
+    <div class="mb-5">
+        <h4 class="mb-3 border-bottom pb-2">Expense Details</h4>
+        <table class="table table-bordered table-striped">
+            <thead class="table-light">
+                <tr>
+                    <th>Expense Head</th>
+                    <th class="text-center">Quotation Amount</th>
+                    <th class="text-end">Requisition Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.RequisitionDetails != null && Model.RequisitionDetails.Any())
+                {
+                    foreach (var detail in Model.RequisitionDetails)
+                    {
+                        var amount = detail.Amount;
+                        totalAmount += amount;
+
+                        <tr>
+                            <td>@detail.ExpenseHead?.ExpenseName</td>
+                            <td class="text-center">
+                                @if (quotationAmounts != null && quotationAmounts.ContainsKey(detail.ExpenseHead.Id))
+                                {
+                                    @quotationAmounts[detail.ExpenseHead.Id].ToString("N2")
+                                }
+                                else
+                                {
+                                    <span class="text-muted">N/A</span>
+                                }
+                            </td>
+                            <td class="text-end">@amount.ToString("N2")</td>
+                        </tr>
+                    }
+
+                    <tr class="fw-bold table-active">
+                        <td colspan="2">Total</td>
+                        <td class="text-end">@totalAmount.ToString("N2")</td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3" class="text-center text-muted">No expense details available.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Matching Requisitions -->
+    <div class="mb-5">
+        <h4 class="mb-3 border-bottom pb-2">Matching Requisitions</h4>
+        @if (matchingRequisitions?.Any() == true)
+        {
+            <table class="table table-bordered table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Employee</th>
+                        <th>Requisition No</th>
+                        <th>Requisition Date</th>
+                        <th class="text-end">Total Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var req in matchingRequisitions)
+                    {
+                        var amount = req.RequisitionDetails?.Sum(rd => rd.Amount) ?? 0;
+
+                        <tr>
+                            <td>@req.Employee?.Name</td>
+                            <td>@req.RequisitionNo</td>
+                            <td>@req.RequisitionDate.ToString("dd-MMM-yyyy")</td>
+                            <td class="text-end">
+                                <a asp-action="Details" asp-route-id="@req.Id" class="text-decoration-none">
+                                    @amount.ToString("N2")
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p class="text-muted text-center">No matching requisitions found.</p>
+        }
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="d-flex justify-content-between border-top pt-3">
+        <div>
+            <a asp-action="DownloadStructuredPdf" asp-route-id="@Model.Id" class="btn btn-outline-success">
+            View PDF
+            </a>
+            <a asp-action="upsert" asp-route-id="@Model.Id" class="btn btn-outline-primary me-2">Edit</a>
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">Delete</a>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+    </div>
+</div>

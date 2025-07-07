@@ -1,0 +1,163 @@
+﻿@model ClearingAndForwarding.Models.BEdetails
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>BEdetails</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="FileNo" class="control-label"></label>
+                <input asp-for="FileNo" class="form-control" />
+                <span asp-validation-for="FileNo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BENo" class="control-label"></label>
+                <input asp-for="BENo" class="form-control" />
+                <span asp-validation-for="BENo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BEDate" class="control-label"></label>
+                <input asp-for="BEDate" class="form-control" />
+                <span asp-validation-for="BEDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LCNo" class="control-label"></label>
+                <input asp-for="LCNo" class="form-control" />
+                <span asp-validation-for="LCNo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LCDate" class="control-label"></label>
+                <input asp-for="LCDate" class="form-control" />
+                <span asp-validation-for="LCDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ItemName" class="control-label"></label>
+                <input asp-for="ItemName" class="form-control" />
+                <span asp-validation-for="ItemName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Quantity" class="control-label"></label>
+                <input asp-for="Quantity" class="form-control" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UOM" class="control-label"></label>
+                <input asp-for="UOM" class="form-control" />
+                <span asp-validation-for="UOM" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Currency" class="control-label"></label>
+                <input asp-for="Currency" class="form-control" />
+                <span asp-validation-for="Currency" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Amount" class="control-label"></label>
+                <input asp-for="Amount" class="form-control" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InvoiceNo" class="control-label"></label>
+                <input asp-for="InvoiceNo" class="form-control" />
+                <span asp-validation-for="InvoiceNo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InvoiceDate" class="control-label"></label>
+                <input asp-for="InvoiceDate" class="form-control" />
+                <span asp-validation-for="InvoiceDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UnitCode" class="control-label"></label>
+                <input asp-for="UnitCode" class="form-control" />
+                <span asp-validation-for="UnitCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AssessableValue" class="control-label"></label>
+                <input asp-for="AssessableValue" class="form-control" />
+                <span asp-validation-for="AssessableValue" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Weight" class="control-label"></label>
+                <input asp-for="Weight" class="form-control" />
+                <span asp-validation-for="Weight" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Shipper" class="control-label"></label>
+                <input asp-for="Shipper" class="form-control" />
+                <span asp-validation-for="Shipper" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ArrivalDate" class="control-label"></label>
+                <input asp-for="ArrivalDate" class="form-control" />
+                <span asp-validation-for="ArrivalDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ODRecDate" class="control-label"></label>
+                <input asp-for="ODRecDate" class="form-control" />
+                <span asp-validation-for="ODRecDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="AssessmentDate" class="control-label"></label>
+                <input asp-for="AssessmentDate" class="form-control" />
+                <span asp-validation-for="AssessmentDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DODate" class="control-label"></label>
+                <input asp-for="DODate" class="form-control" />
+                <span asp-validation-for="DODate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DeliveryDate" class="control-label"></label>
+                <input asp-for="DeliveryDate" class="form-control" />
+                <span asp-validation-for="DeliveryDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OnChassis" class="control-label"></label>
+                <input asp-for="OnChassis" class="form-control" />
+                <span asp-validation-for="OnChassis" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContainerNo" class="control-label"></label>
+                <input asp-for="ContainerNo" class="form-control" />
+                <span asp-validation-for="ContainerNo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ContainerSize" class="control-label"></label>
+                <input asp-for="ContainerSize" class="form-control" />
+                <span asp-validation-for="ContainerSize" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FileURL" class="control-label"></label>
+                <input asp-for="FileURL" class="form-control" />
+                <span asp-validation-for="FileURL" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Remarks" class="control-label"></label>
+                <input asp-for="Remarks" class="form-control" />
+                <span asp-validation-for="Remarks" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UserCode" class="control-label"></label>
+                <input asp-for="UserCode" class="form-control" />
+                <span asp-validation-for="UserCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

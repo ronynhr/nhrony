@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Import Expenses";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-info">
+        @ViewBag.Message
+    </div>
+}
+
+@using (Html.BeginForm("Import", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-group">
+        <label for="fileUpload">Upload CSV File</label>
+        <input type="file" name="fileUpload" id="fileUpload" class="form-control" accept=".csv" />
+    </div>
+    <button type="submit" class="btn btn-primary">Upload</button>
+}
+

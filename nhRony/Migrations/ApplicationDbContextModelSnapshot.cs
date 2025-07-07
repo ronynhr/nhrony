@@ -17,12 +17,12 @@ namespace ClearingAndForwarding.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("ProductVersion", "9.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ClearingAndForwarding.Models.Account", b =>
+            modelBuilder.Entity("ClearingAndForwarding.Models.BEdetails", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,21 +30,114 @@ namespace ClearingAndForwarding.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("PasswordHash")
+                    b.Property<decimal?>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateOnly?>("ArrivalDate")
+                        .HasColumnType("date");
+
+                    b.Property<decimal?>("AssessableValue")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateOnly?>("AssessmentDate")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("BEDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("BENo")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
+                    b.Property<string>("ContainerNo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Username")
-                        .IsRequired()
+                    b.Property<string>("ContainerSize")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Currency")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly?>("DODate")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly?>("DeliveryDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("FileNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileURL")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly?>("InvoiceDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("InvoiceNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ItemName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly?>("LCDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("LCNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly?>("ODRecDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("OnChassis")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Quantity")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Remarks")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Shipper")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UOM")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UnitCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("Weight")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Accounts");
+                    b.ToTable("BEdetails");
+                });
+
+            modelBuilder.Entity("ClearingAndForwarding.Models.BillTypes", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BillTypeDescription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BillTypeName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BillTypes");
                 });
 
             modelBuilder.Entity("ClearingAndForwarding.Models.Employee", b =>
@@ -100,11 +193,16 @@ namespace ClearingAndForwarding.Migrations
                     b.Property<int>("ExpenseId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("QuotationID")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ExpenseHeadId");
 
                     b.HasIndex("ExpenseId");
+
+                    b.HasIndex("QuotationID");
 
                     b.ToTable("ExpenseDetails");
                 });
@@ -138,11 +236,14 @@ namespace ClearingAndForwarding.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("BEno")
+                    b.Property<decimal?>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int?>("BEdetailsID")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("BillAmount")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int>("BEno")
+                        .HasColumnType("int");
 
                     b.Property<DateOnly>("BillDate")
                         .HasColumnType("date");
@@ -163,11 +264,201 @@ namespace ClearingAndForwarding.Migrations
                     b.Property<DateTime>("PostingDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("RequisitionID")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("BEdetailsID");
 
                     b.HasIndex("EmployeeId");
 
+                    b.HasIndex("RequisitionID")
+                        .IsUnique()
+                        .HasFilter("[RequisitionID] IS NOT NULL");
+
                     b.ToTable("Expenses");
+                });
+
+            modelBuilder.Entity("ClearingAndForwarding.Models.ItemCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Remarks")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ItemCategories");
+                });
+
+            modelBuilder.Entity("ClearingAndForwarding.Models.Quotation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ApprovedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateOnly>("EffectiveDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("ExpenseHeadID")
+                        .HasColumnType("int");
+
+                    b.Property<DateOnly?>("ExpiryDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Remarks")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("itemName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExpenseHeadID");
+
+                    b.ToTable("Quotation");
+                });
+
+            modelBuilder.Entity("ClearingAndForwarding.Models.Requisition", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal?>("AdjustedAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("BEdetailsID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ExpenseID")
+                        .HasColumnType("int");
+
+                    b.Property<decimal?>("RequisitionAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateOnly>("RequisitionDate")
+                        .HasColumnType("date");
+
+                    b.Property<string>("RequisitionNo")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BEdetailsID");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("Requisition");
+                });
+
+            modelBuilder.Entity("ClearingAndForwarding.Models.RequisitionDetails", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ExpenseHeadId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequisitionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExpenseHeadId");
+
+                    b.HasIndex("RequisitionId");
+
+                    b.ToTable("RequisitionDetails");
+                });
+
+            modelBuilder.Entity("ClearingAndForwarding.Models.UnitName", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("BINno")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CodeName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompanyName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TINno")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UnitName");
+                });
+
+            modelBuilder.Entity("ClearingAndForwarding.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("ClearingAndForwarding.Models.ExpenseDetails", b =>
@@ -184,20 +475,87 @@ namespace ClearingAndForwarding.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ClearingAndForwarding.Models.Quotation", "Quotation")
+                        .WithMany()
+                        .HasForeignKey("QuotationID");
+
                     b.Navigation("Expense");
 
                     b.Navigation("ExpenseHead");
+
+                    b.Navigation("Quotation");
                 });
 
             modelBuilder.Entity("ClearingAndForwarding.Models.Expenses", b =>
                 {
+                    b.HasOne("ClearingAndForwarding.Models.BEdetails", "Bedetails")
+                        .WithMany()
+                        .HasForeignKey("BEdetailsID");
+
                     b.HasOne("ClearingAndForwarding.Models.Employee", "Employee")
                         .WithMany("Expenses")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ClearingAndForwarding.Models.Requisition", "Requisition")
+                        .WithOne("Expenses")
+                        .HasForeignKey("ClearingAndForwarding.Models.Expenses", "RequisitionID");
+
+                    b.Navigation("Bedetails");
+
                     b.Navigation("Employee");
+
+                    b.Navigation("Requisition");
+                });
+
+            modelBuilder.Entity("ClearingAndForwarding.Models.Quotation", b =>
+                {
+                    b.HasOne("ClearingAndForwarding.Models.ExpenseHead", "ExpenseHead")
+                        .WithMany()
+                        .HasForeignKey("ExpenseHeadID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ExpenseHead");
+                });
+
+            modelBuilder.Entity("ClearingAndForwarding.Models.Requisition", b =>
+                {
+                    b.HasOne("ClearingAndForwarding.Models.BEdetails", "Bedetails")
+                        .WithMany()
+                        .HasForeignKey("BEdetailsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ClearingAndForwarding.Models.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Bedetails");
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("ClearingAndForwarding.Models.RequisitionDetails", b =>
+                {
+                    b.HasOne("ClearingAndForwarding.Models.ExpenseHead", "ExpenseHead")
+                        .WithMany()
+                        .HasForeignKey("ExpenseHeadId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ClearingAndForwarding.Models.Requisition", "Requisition")
+                        .WithMany("RequisitionDetails")
+                        .HasForeignKey("RequisitionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ExpenseHead");
+
+                    b.Navigation("Requisition");
                 });
 
             modelBuilder.Entity("ClearingAndForwarding.Models.Employee", b =>
@@ -213,6 +571,13 @@ namespace ClearingAndForwarding.Migrations
             modelBuilder.Entity("ClearingAndForwarding.Models.Expenses", b =>
                 {
                     b.Navigation("ExpenseDetails");
+                });
+
+            modelBuilder.Entity("ClearingAndForwarding.Models.Requisition", b =>
+                {
+                    b.Navigation("Expenses");
+
+                    b.Navigation("RequisitionDetails");
                 });
 #pragma warning restore 612, 618
         }

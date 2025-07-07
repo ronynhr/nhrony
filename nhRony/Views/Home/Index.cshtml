@@ -1,8 +1,67 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold">Welcome to DBL C&F System</h1>
+        <p class="lead text-muted">Manage your clearing and forwarding activities efficiently — from requisitions and expenses to quotations and imports.</p>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Employees</h5>
+                    <p class="card-text">View and manage employee records and assignments.</p>
+                    <a asp-controller="Employees" asp-action="Index" class="btn btn-outline-primary">Go to Employees</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Expenses</h5>
+                    <p class="card-text">Track and maintain all consignment-related expenses.</p>
+                    <a asp-controller="Expenses" asp-action="Index" class="btn btn-outline-primary">Go to Expenses</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Quotations</h5>
+                    <p class="card-text">Manage vendor quotations and container-wise rates.</p>
+                    <a asp-controller="Quotations" asp-action="Index" class="btn btn-outline-primary">Go to Quotations</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Requisitions</h5>
+                    <p class="card-text">Create and track fund requisitions with detailed heads.</p>
+                    <a asp-controller="Requisitions" asp-action="Index" class="btn btn-outline-primary">Go to Requisitions</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">BE Details</h5>
+                    <p class="card-text">Monitor import B/E numbers and linked activities.</p>
+                    <a asp-controller="BEdetails" asp-action="Index" class="btn btn-outline-primary">Go to BE List</a>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Import Dashboard</h5>
+                    <p class="card-text">View import activity and upload related data.</p>
+                    <a asp-controller="Home" asp-action="Import" class="btn btn-outline-primary">Go to Import</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

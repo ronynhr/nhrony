@@ -39,3 +39,139 @@ body {
     padding: 0.25rem 0.5rem; /* Adjust padding for sleeker look */
     font-size: 0.8rem; /* Adjust font size */
 }
+
+
+/* Oracle-style Design */
+.content-section {
+    margin-bottom: 30px;
+    padding: 15px; /* Slightly less padding for the section */
+    border: 1px solid #d4d4d4; /* Light gray border */
+    border-radius: 4px;
+    background-color: #f3f4f6; /* Light background */
+}
+
+.content-section h4 {
+    font-size: 1.1em; /* Slightly smaller font size */
+    color: #004990; /* Oracle-style blue */
+    border-bottom: 2px solid #d4d4d4;
+    padding-bottom: 6px; /* Reduced padding */
+    margin-bottom: 15px; /* Reduced margin */
+}
+
+.table thead th {
+    background-color: #e8eaf6; /* Light blue header */
+    color: #333;
+    font-weight: bold;
+    text-align: left;
+    padding: 6px 2px; /* Further reduced vertical padding */
+    font-size: 0.9em; /* Smaller font size for headers */
+}
+
+.table th, .table td {
+    padding: 3px 2px; /* Further reduced padding for more compact rows */
+    vertical-align: middle;
+    font-size: 0.9em; /* Smaller font size for table cells */
+    color: #333;
+}
+
+.total-row {
+    font-weight: bold;
+    background-color: #f1f1f1;
+}
+
+.btn-back {
+    margin-top: 20px;
+    color: white;
+    background-color: #004990; /* Oracle blue for buttons */
+    padding: 8px 16px; /* Slightly smaller button padding */
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.9em; /* Smaller font for buttons */
+}
+
+/* Responsive adjustments */
+@media (max-width: 767px) {
+    .content-section {
+        padding: 10px; /* Even less padding on smaller screens */
+    }
+
+    .table th, .table td {
+        padding: 5px 2px; /* Further reduce padding on small screens */
+    }
+}
+
+
+.btn-delete {
+    height: 100%; /* Set the button height */
+    width:;
+    padding: 2px 6px; /* Adjust padding to fit the small height */
+    font-size: 12px; /* Adjust font size for smaller text */
+    background-color: transparent; /* No background for an outline style */
+    color: #6c757d; /* Text color */
+    border: 1px solid #6c757d; /* Border color */
+    border-radius: 3px; /* Optional rounded corners */
+    cursor: pointer; /* Show pointer on hover */
+    line-height: 1; /* Ensure text is vertically centered */
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s; /* Smooth transition for hover effects */
+}
+
+    .btn-delete:hover {
+        background-color: rgba(108, 117, 125, 0.1); /* Light gray background on hover */
+        color: #6c757d; /* Text color on hover */
+        border-color: #6c757d; /* Border color on hover */
+    }
+
+    .no-underline {
+        text-decoration: none;
+    }
+
+    /*Login style*/
+    .form-control:hover {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+    }
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+    .form-control::placeholder {
+        color: #999;
+        font-style: italic;
+    }
+    .text-danger {
+        font-size: 0.9rem;
+        color: #e74c3c;
+    }
+
+
+#suggestionsBox {
+    position: absolute;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: none; /* Initially hidden */
+    z-index: 1000; /* Ensure it's above other content */
+    padding: 5px 0; /* Some space inside */
+    max-height: 200px; /* Adjust based on needs */
+    overflow-y: auto; /* Vertical scroll if too many items */
+}
+
+.suggestion-item {
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+}
+
+    .suggestion-item:hover {
+        background-color: #f1f1f1;
+    }
+
+#BEdetailsID {
+    position: relative;
+}
+
+a.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}

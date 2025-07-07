@@ -1,0 +1,47 @@
+﻿@model ClearingAndForwarding.Models.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 75vh;">
+    <div class="card p-3 shadow-lg" style="width: 100%; max-width: 350px; border-radius: 8px;">
+
+
+        <form asp-action="Register" method="post">
+            <div class="mb-2">
+                <label asp-for="Username" class="form-label" style="font-weight: 500;">Username</label>
+                <input asp-for="Username" class="form-control" style="height: 36px; font-size: 0.9rem;" placeholder="Enter your username" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+
+            <div class="mb-2">
+                <label asp-for="Password" class="form-label" style="font-weight: 500;">Password</label>
+                <input asp-for="Password" type="password" class="form-control" style="height: 36px; font-size: 0.9rem;" placeholder="Enter your password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="mb-2">
+                <label asp-for="ConfirmPassword" class="form-label" style="font-weight: 500;">Confirm Password</label>
+                <input asp-for="ConfirmPassword" type="password" class="form-control" style="height: 36px; font-size: 0.9rem;" placeholder="Confirm your password" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+
+            <div class="mb-2">
+                <label asp-for="Role" class="form-label" style="font-weight: 500;">Role</label>
+                <input asp-for="Role" class="form-control" style="height: 36px; font-size: 0.9rem;" placeholder="Enter your role" />
+                <span asp-validation-for="Role" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100" style="font-size: 1rem; padding: 6px; border-radius: 5px; transition: background-color 0.3s;">Register</button>
+        </form>
+
+        <p class="text-center mt-3" style="font-size: 0.9rem; color: #666;">
+            Already have an account? <a asp-controller="Account" asp-action="Login" style="color: #007bff;">Login here</a>.
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    @Html.Partial("_ValidationScriptsPartial")
+}

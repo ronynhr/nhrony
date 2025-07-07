@@ -1,0 +1,325 @@
+﻿@model ClearingAndForwarding.Models.BEdetails
+
+@{
+    ViewData["Title"] = Model.Id == 0 ? "Create BE Details" : "Edit BE Details";
+    var returnUrl = ViewData["ReturnUrl"] as string;
+}
+
+<style>
+    /* Floating label input tweaks */
+    .form-floating > .form-control-sm {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    .form-floating > label {
+        font-size: 0.85rem;
+        padding-left: 0.25rem;
+    }
+
+    .form-row {
+        margin-bottom: 0.8rem;
+    }
+
+    /* Validation message under floating inputs */
+    .form-floating + span {
+        display: block;
+        margin-top: 0.25rem;
+    }
+
+    /* 5 columns layout */
+    .five-cols-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+        .five-cols-row > div {
+            flex: 1 1 18%; /* roughly 5 items per row with some gap */
+            min-width: 150px; /* prevents too narrow inputs */
+            max-width: 200px;
+        }
+</style>
+
+<h5 class="mb-3">@ViewData["Title"]</h5>
+
+<form asp-action="Upsert" method="post" class="p-3 border rounded shadow-sm bg-light">
+    <input type="hidden" asp-for="Id" />
+    <input type="hidden" name="returnUrl" value="@returnUrl" />
+
+    <div class="container-fluid">
+
+        <div class="five-cols-row">
+            <div>
+                <div class="form-floating">
+                    <input asp-for="FileNo" class="form-control form-control-sm" placeholder="File No" />
+                    <label asp-for="FileNo">File No</label>
+                </div>
+                <span asp-validation-for="FileNo" class="text-danger fst-italic small"></span>
+            </div>
+            <div>
+                <div class="form-floating">
+                    <input asp-for="BENo" class="form-control form-control-sm" placeholder="BE No" />
+                    <label asp-for="BENo">BE No</label>
+                </div>
+                <span asp-validation-for="BENo" class="text-danger fst-italic small"></span>
+            </div>
+            <div>
+                <div class="form-floating">
+                    <input asp-for="BEDate" type="date" class="form-control form-control-sm" placeholder="BE Date" />
+                    <label asp-for="BEDate">BE Date</label>
+                </div>
+                <span asp-validation-for="BEDate" class="text-danger fst-italic small"></span>
+            </div>
+            <div>
+                <div class="form-floating">
+                    <input asp-for="LCNo" class="form-control form-control-sm" placeholder="LC No" />
+                    <label asp-for="LCNo">LC No</label>
+                </div>
+                <span asp-validation-for="LCNo" class="text-danger fst-italic small"></span>
+            </div>
+            <div>
+                <div class="form-floating">
+                    <input asp-for="LCDate" type="date" class="form-control form-control-sm" placeholder="LC Date" />
+                    <label asp-for="LCDate">LC Date</label>
+                </div>
+                <span asp-validation-for="LCDate" class="text-danger fst-italic small"></span>
+            </div>
+        </div>
+
+        <div class="five-cols-row">
+            <div>
+                <div class="form-floating">
+                    <input asp-for="ItemName" class="form-control form-control-sm" placeholder="Item Name" />
+                    <label asp-for="ItemName">Item Name</label>
+                </div>
+                <span asp-validation-for="ItemName" class="text-danger fst-italic small"></span>
+            </div>
+            <div>
+                <div class="form-floating">
+                    <input asp-for="Quantity" class="form-control form-control-sm" placeholder="Quantity" />
+                    <label asp-for="Quantity">Quantity</label>
+                </div>
+                <span asp-validation-for="Quantity" class="text-danger fst-italic small"></span>
+            </div>
+            <div>
+                <div class="form-floating">
+                    <input asp-for="UOM" class="form-control form-control-sm" placeholder="UOM" />
+                    <label asp-for="UOM">UOM</label>
+                </div>
+                <span asp-validation-for="UOM" class="text-danger fst-italic small"></span>
+            </div>
+            <div>
+                <div class="form-floating">
+                    <input asp-for="Currency" class="form-control form-control-sm" placeholder="Currency" />
+                    <label asp-for="Currency">Currency</label>
+                </div>
+                <span asp-validation-for="Currency" class="text-danger fst-italic small"></span>
+            </div>
+            <div>
+                <div class="form-floating">
+                    <input asp-for="Amount" class="form-control form-control-sm comma-format" placeholder="Invoice Amount" />
+                    <label asp-for="Amount">Invoice Amount</label>
+                </div>
+                <span asp-validation-for="Amount" class="text-danger fst-italic small"></span>
+            </div>
+        </div>
+
+        <div class="five-cols-row">
+            <div>
+                <div class="form-floating">
+                    <input asp-for="InvoiceNo" class="form-control form-control-sm" placeholder="Invoice No" />
+                    <label asp-for="InvoiceNo">Invoice No</label>
+                </div>
+                <span asp-validation-for="InvoiceNo" class="text-danger fst-italic small"></span>
+            </div>
+            <div>
+                <div class="form-floating">
+                    <input asp-for="InvoiceDate" type="date" class="form-control form-control-sm" placeholder="Invoice Date" />
+                    <label asp-for="InvoiceDate">Invoice Date</label>
+                </div>
+                <span asp-validation-for="InvoiceDate" class="text-danger fst-italic small"></span>
+            </div>
+            <div>
+                <div class="form-floating">
+                    <input asp-for="UnitCode" class="form-control form-control-sm" placeholder="Unit Code" />
+                    <label asp-for="UnitCode">Unit Code</label>
+                </div>
+                <span asp-validation-for="UnitCode" class="text-danger fst-italic small"></span>
+            </div>
+            <div>
+                <div class="form-floating">
+                    <input asp-for="AssessableValue" class="form-control form-control-sm comma-format" autocomplete="off" />
+                    <label asp-for="AssessableValue">Assessable Value</label>
+                </div>
+                <span asp-validation-for="AssessableValue" class="text-danger fst-italic small"></span>
+
+            </div>
+            <div>
+                <div class="form-floating">
+                    <input asp-for="Weight" autocomplete="off" class="form-control form-control-sm comma-format" placeholder="Weight (in KG)" />
+                    <label asp-for="Weight">Weight (in KG)</label>
+                </div>
+                <span asp-validation-for="Weight" class="text-danger fst-italic small"></span>
+            </div>
+        </div>
+
+        <div class="five-cols-row">
+            <div>
+                <div class="form-floating">
+                    <input asp-for="Shipper" class="form-control form-control-sm" placeholder="Shipper" />
+                    <label asp-for="Shipper">Shipper</label>
+                </div>
+                <span asp-validation-for="Shipper" class="text-danger fst-italic small"></span>
+            </div>
+            <div>
+                <div class="form-floating">
+                    <input asp-for="ArrivalDate" type="date" class="form-control form-control-sm" placeholder="Arrival Date" />
+                    <label asp-for="ArrivalDate">Arrival Date</label>
+                </div>
+                <span asp-validation-for="ArrivalDate" class="text-danger fst-italic small"></span>
+            </div>
+            <div>
+                <div class="form-floating">
+                    <input asp-for="ODRecDate" type="date" class="form-control form-control-sm" placeholder="OD Received" />
+                    <label asp-for="ODRecDate">OD Received</label>
+                </div>
+                <span asp-validation-for="ODRecDate" class="text-danger fst-italic small"></span>
+            </div>
+            <div>
+                <div class="form-floating">
+                    <input asp-for="AssessmentDate" type="date" class="form-control form-control-sm" placeholder="Assessment Date" />
+                    <label asp-for="AssessmentDate">Assessment Date</label>
+                </div>
+                <span asp-validation-for="AssessmentDate" class="text-danger fst-italic small"></span>
+            </div>
+            <div>
+                <div class="form-floating">
+                    <input asp-for="DODate" type="date" class="form-control form-control-sm" placeholder="DO Date" />
+                    <label asp-for="DODate">DO Date</label>
+                </div>
+                <span asp-validation-for="DODate" class="text-danger fst-italic small"></span>
+            </div>
+        </div>
+
+        <div class="five-cols-row">
+            <div>
+                <div class="form-floating">
+                    <input asp-for="DeliveryDate" type="date" class="form-control form-control-sm" placeholder="Delivery Date" />
+                    <label asp-for="DeliveryDate">Delivery Date</label>
+                </div>
+                <span asp-validation-for="DeliveryDate" class="text-danger fst-italic small"></span>
+            </div>
+            <div class="form-floating">
+                <select asp-for="OnChassis" class="form-select form-select-sm" asp-items="ViewBag.DeliveryTypes">
+                    <option value="">-- Select --</option>
+                </select>
+                <label asp-for="OnChassis">Delivery Type</label>
+            </div>
+
+
+            <div>
+                <div class="form-floating">
+                    <input asp-for="ContainerNo" type="number" class="form-control form-control-sm" placeholder="Container No" />
+                    <label asp-for="ContainerNo">Container No</label>
+                </div>
+                <span asp-validation-for="ContainerNo" class="text-danger fst-italic small"></span>
+            </div>
+            <div>
+                <div class="form-floating">
+                    <input asp-for="ContainerSize" class="form-control form-control-sm" placeholder="Container Size" />
+                    <label asp-for="ContainerSize">Container Size</label>
+                </div>
+                <span asp-validation-for="ContainerSize" class="text-danger fst-italic small"></span>
+            </div>
+            <div>
+                <div class="form-floating">
+                    <input asp-for="FileURL" class="form-control form-control-sm" placeholder="File Link" />
+                    <label asp-for="FileURL">File Link</label>
+                </div>
+                <span asp-validation-for="FileURL" class="text-danger fst-italic small"></span>
+            </div>
+        </div>
+
+        <div class="five-cols-row">
+            <div>
+                <div class="form-floating">
+                    <input asp-for="Remarks" class="form-control form-control-sm" placeholder="Remarks" />
+                    <label asp-for="Remarks">Remarks</label>
+                </div>
+                <span asp-validation-for="Remarks" class="text-danger fst-italic small"></span>
+            </div>
+            <div>
+                <div class="form-floating">
+                    <input asp-for="UserCode" class="form-control form-control-sm" placeholder="User Code" />
+                    <label asp-for="UserCode">User Code</label>
+                </div>
+                <span asp-validation-for="UserCode" class="text-danger fst-italic small"></span>
+            </div>
+            <div class="form-floating">
+                <select asp-for="ItemCategoryId" class="form-select form-select-sm" asp-items="ViewBag.ItemCategories">
+                    <option value="">-- Select --</option>
+                </select>
+                <label asp-for="ItemCategoryId">Item Category</label>
+            </div>
+            <div><!-- empty --></div>
+            <div><!-- empty --></div>
+        </div>
+
+    </div>
+
+    <div class="d-flex justify-content-between mt-3">
+        <button type="submit" class="btn btn-primary btn-sm px-3">
+            @(Model.Id == 0 ? "Create" : "Update")
+        </button>
+
+        @if (!string.IsNullOrEmpty(returnUrl))
+        {
+            <a href="@returnUrl" class="btn btn-outline-secondary btn-sm px-3">Back</a>
+        }
+    </div>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+    <script>
+        function formatNumberWithCommas(value) {
+            const parts = value.replace(/,/g, "").split(".");
+            const integerPart = parts[0];
+            const decimalPart = parts.length > 1 ? "." + parts[1].slice(0, 2) : "";
+            return integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + decimalPart;
+        }
+
+        function stripCommas(value) {
+            return value.replace(/,/g, "");
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const inputs = document.querySelectorAll(".comma-format");
+
+            inputs.forEach(input => {
+                // Format on load
+                if (input.value) {
+                    input.value = formatNumberWithCommas(input.value);
+                }
+
+                // Format while typing
+                input.addEventListener("input", (e) => {
+                    const cursorPosition = input.selectionStart;
+                    const rawValue = stripCommas(input.value);
+                    if (!isNaN(rawValue)) {
+                        input.value = formatNumberWithCommas(rawValue);
+                        input.setSelectionRange(cursorPosition, cursorPosition);
+                    }
+                });
+
+                // Remove commas before form submission
+                input.closest("form").addEventListener("submit", () => {
+                    input.value = stripCommas(input.value);
+                });
+            });
+        });
+    </script>
+}
+

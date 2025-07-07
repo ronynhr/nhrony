@@ -1,0 +1,82 @@
+﻿@model ClearingAndForwarding.Models.RequisitionViewModel
+
+@{
+    ViewData["Title"] = "Requisitions List";
+}
+
+<h2 class="h4 mb-3">Requisition List</h2>
+
+<!-- Search Form -->
+<form asp-action="Index" method="get" class="mb-3">
+    <div class="input-group">
+        <input type="text" name="searchString" class="form-control"
+               placeholder="Search by Name, BE No, Bill Type, or Amount"
+               value="@Model.SearchString" />
+        <button class="btn btn-outline-secondary" type="submit">Search</button>
+        <a asp-action="upsert" class="btn btn-outline-secondary ms-2">Create</a>
+    </div>
+</form>
+
+<!-- Requisition List Table -->
+<table class="table table-sm table-hover table-bordered">
+    <thead class="table-light">
+        <tr>
+            <th style="padding-left: 20px; width: 50%;">Employee Name</th>
+            <th class="text-center">Number</th>
+            <th class="text-center">Date</th>
+            <th class="text-center">BE No</th>
+            <th class="text-end" style="padding-right: 20px;">Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var requisition in Model.Requisitions)
+        {
+            <tr>
+                <td style="padding-left: 20px">@requisition.Employee?.Name</td>
+                <td class="text-center">@requisition.RequisitionNo</td>
+                <td class="text-center">@requisition.RequisitionDate.ToString("yyyy-MM-dd")</td>
+                <td class="text-center">@requisition.Bedetails?.BENo</td>
+                <td class="text-end" style="padding-right: 20px;">
+                    <a asp-action="Details" asp-route-id="@requisition.Id"
+                       class="text-decoration-none d-block">
+                        @string.Format("{0:N}", requisition.RequisitionAmount)
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Pagination Controls -->
+@if (Model.TotalPages > 1)
+{
+    <nav>
+        <ul class="pagination">
+            <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-pageNumber="1"
+                   asp-route-searchString="@Model.SearchString">First</a>
+            </li>
+            <li class="page-item @(Model.PageNumber == 1 ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber - 1)"
+                   asp-route-searchString="@Model.SearchString">Previous</a>
+            </li>
+
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-pageNumber="@i"
+                       asp-route-searchString="@Model.SearchString">@i</a>
+                </li>
+            }
+
+            <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-pageNumber="@(Model.PageNumber + 1)"
+                   asp-route-searchString="@Model.SearchString">Next</a>
+            </li>
+            <li class="page-item @(Model.PageNumber == Model.TotalPages ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-pageNumber="@Model.TotalPages"
+                   asp-route-searchString="@Model.SearchString">Last</a>
+            </li>
+        </ul>
+    </nav>
+}

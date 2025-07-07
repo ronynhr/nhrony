@@ -1,0 +1,20 @@
+﻿@{
+    ViewData["Title"] = "Import Shipment Details";
+}
+
+<h2>Import Shipment Details</h2>
+
+<form asp-action="Import" enctype="multipart/form-data" method="post">
+    <div class="form-group">
+        <label for="fileUpload">Upload CSV File</label>
+        <input type="file" name="fileUpload" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Upload</button>
+</form>
+
+@if (ViewBag.Message != null)
+{
+    <div class="alert alert-info mt-3">
+        @ViewBag.Message
+    </div>
+}

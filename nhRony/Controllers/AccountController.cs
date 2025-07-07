@@ -13,11 +13,11 @@ using System.Threading.Tasks;
 
 namespace ClearingAndForwarding.Controllers
 {
-    public class BEdetailsViewModel : Controller
+    public class AccountController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public BEdetailsViewModel(ApplicationDbContext context)
+        public AccountController(ApplicationDbContext context)
         {
             _context = context;
         }

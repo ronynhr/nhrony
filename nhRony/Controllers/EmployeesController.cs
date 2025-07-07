@@ -5,19 +5,18 @@ using ClearingAndForwarding.Models;
 
 namespace ClearingAndForwarding.Controllers
 {
-    public class EmployeesController : Controller
+    public class EmployeesController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public EmployeesController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        private readonly ApplicationDbContext _context = context;
 
         // GET: Employees
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Employee.ToListAsync());
+            var employees = await _context.Employee
+                //.Where(e => e.EmploymentStatus != "Expense") // Exclude employees with EmploymentStatus "Expense"
+                .ToListAsync();
+
+            return View(employees);
         }
 
         // GET: Employees/Details/5

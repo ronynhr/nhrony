@@ -1,0 +1,328 @@
+﻿@model ClearingAndForwarding.Models.Expenses
+@using System.Globalization
+@{
+    bool isEdit = Model.Id > 0;
+    ViewData["Title"] = isEdit ? "Edit Expense" : "Create Expense";
+}
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        Please correct the following errors:
+        <ul>
+            @foreach (var entry in ViewData.ModelState)
+            {
+                foreach (var error in entry.Value.Errors)
+                {
+                    <li>@error.ErrorMessage</li>
+                }
+            }
+        </ul>
+    </div>
+}
+
+<form asp-action="Upsert" method="post" class="p-4 border rounded shadow-sm bg-light">
+    <h3 class="h5 mb-4">@ViewData["Title"]</h3>
+
+    @if (isEdit)
+    {
+        <input type="hidden" asp-for="Id" />
+    }
+
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <td>Employee Name:</td>
+                <td>
+                    <select asp-for="EmployeeId" class="form-select form-select-sm" asp-items="ViewBag.EmployeeList"></select>
+                    <span asp-validation-for="EmployeeId" class="text-danger"></span>
+                </td>
+                <td>Bill Type:</td>
+                <td>
+                    <select asp-for="BillType" class="form-select form-select-sm" asp-items="ViewBag.BillTypes"></select>
+                    <span asp-validation-for="BillType" class="text-danger"></span>
+                </td>
+                <td>Bill Date:</td>
+                <td>
+                    <input asp-for="BillDate" class="form-control form-control-sm" type="date" />
+                    <span asp-validation-for="BillDate" class="text-danger"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>BE Number:</td>
+                <td>
+                    <input id="BEdetailsID" type="text" class="form-control form-control-sm" autocomplete="off"
+                           value="@(Model.BEno != 0 ? Model.BEno.ToString() : "")"
+                           placeholder="Please input BE number" />
+                    <div id="suggestionsBox" class="list-group" style="display:none;"></div>
+                </td>
+                <td>File Number:</td>
+                <td>
+                    <input asp-for="FileNo" class="form-control form-control-sm" />
+                    <span asp-validation-for="FileNo" class="text-danger"></span>
+                </td>
+                <td>Bill Number:</td>
+                <td>
+                    <input asp-for="BillNo" class="form-control form-control-sm" />
+                    <span asp-validation-for="BillNo" class="text-danger"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>Requisition:</td>
+                <td colspan="5">
+                    <select id="RequisitionID" asp-for="RequisitionID" class="form-select form-select-sm">
+                        <option value="">-- Select Requisition --</option>
+                    </select>
+                    <span asp-validation-for="RequisitionID" class="text-danger"></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h4 class="h5 mt-4">Add Expense Details</h4>
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <td>Expense Head:</td>
+                <td>
+                    <select id="expenseHeadId" class="form-select form-select-sm" asp-items="@ViewBag.ExpenseHeadList"></select>
+                </td>
+                <td>Expense Amount:</td>
+                <td>
+                    <input id="expenseAmount" class="form-control form-control-sm" type="number" placeholder="Enter amount" />
+                </td>
+                <td class="text-center">
+                    <button type="button" class="btn btn-primary btn-sm" id="addExpenseDetailButton">Add</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h5 class="h6 mt-4">Added Expense Details</h5>
+    <table class="table table-striped table-bordered table-sm">
+        <thead class="table-light">
+            <tr>
+                <th style="width: 45%;">Expense Head</th>
+                <th style="width: 15%;" class="text-end">Requisition Amount</th>
+                <th style="width: 15%;" class="text-end">System Amount</th>
+                <th style="width: 15%;" class="text-end">Current Amount</th>
+                <th style="width: 10%;" class="text-center">Action</th>
+            </tr>
+        </thead>
+        <tbody id="expenseDetailsTableBody"></tbody>
+        <tfoot class="fw-bold">
+            <tr>
+                <td>Total</td>
+                <td></td>
+                <td class="text-end" id="systemTotal" style="padding-right: 20px;">0.00</td>
+                <td class="text-end" id="currentTotal" style="padding-right: 20px;">0.00</td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <input type="hidden" asp-for="Amount" id="totalAmountField" />
+    <input type="hidden" asp-for="BEno" id="BEnumber" />
+    <input type="hidden" asp-for="BEdetailsID" id="hiddenBE" />
+    <div id="expenseDetailsHiddenFields"></div>
+
+    <button type="submit" class="btn btn-success btn-sm mt-3">Save</button>
+</form>
+
+@section Scripts {
+    <script>
+        const systemExpenseIds = [1, 2, 58, 59, 60];
+        const beList = @Html.Raw(Json.Serialize(ViewBag.beList ?? new List<object>()));
+        const selectedRequisitionId = @(Model.RequisitionID ?? 0);
+
+        let expenseDetails = [];
+        const requisitionAmounts = {};
+        let requisitionsFetched = false;
+
+        // Preload details if editing
+        @if (Model.Requisition?.RequisitionDetails != null)
+        {
+                foreach (var req in Model.Requisition.RequisitionDetails)
+                {
+                        <text>requisitionAmounts[@req.ExpenseHeadId] = @req.Amount.ToString("0.00", CultureInfo.InvariantCulture);</text>
+                }
+        }
+
+        @foreach (var detail in Model.ExpenseDetails ?? new List<ClearingAndForwarding.Models.ExpenseDetails>())
+        {
+                <text>
+                    expenseDetails.push({
+                        ExpenseHeadId: @detail.ExpenseHeadId,
+                        ExpenseName: "@detail.ExpenseHead?.ExpenseName",
+                        Amount: @detail.Amount
+                    });
+                </text>
+        }
+
+        function formatAmount(val) {
+            return parseFloat(val).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function processExpenseTable() {
+            const tbody = document.getElementById("expenseDetailsTableBody");
+            const hidden = document.getElementById("expenseDetailsHiddenFields");
+            let currentTotal = 0, systemTotal = 0;
+            tbody.innerHTML = hidden.innerHTML = "";
+
+            expenseDetails.forEach((item, index) => {
+                const isSystem = systemExpenseIds.includes(+item.ExpenseHeadId);
+                const reqAmount = requisitionAmounts[item.ExpenseHeadId] || 0;
+
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${item.ExpenseName}</td>
+                    <td class="text-end" style="padding-right:20px;">${formatAmount(reqAmount)}</td>
+                    <td class="text-end" style="padding-right:20px;">${isSystem ? formatAmount(item.Amount) : "—"}</td>
+                    <td class="text-end" style="padding-right:20px;">${!isSystem ? formatAmount(item.Amount) : "—"}</td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="removeExpense(${index})">Remove</button>
+                    </td>`;
+
+                if (isSystem) systemTotal += item.Amount;
+                else currentTotal += item.Amount;
+
+                hidden.innerHTML += `
+                    <input type="hidden" name="ExpenseDetails[${index}].ExpenseHeadId" value="${item.ExpenseHeadId}" />
+                    <input type="hidden" name="ExpenseDetails[${index}].Amount" value="${item.Amount}" />`;
+            });
+
+            document.getElementById("systemTotal").textContent = formatAmount(systemTotal);
+            document.getElementById("currentTotal").textContent = formatAmount(currentTotal);
+            document.getElementById("totalAmountField").value = currentTotal.toFixed(2);
+        }
+
+        function addExpenseDetail() {
+            const headSelect = document.getElementById('expenseHeadId');
+            const amountInput = document.getElementById('expenseAmount');
+            const id = headSelect.value;
+            const name = headSelect.options[headSelect.selectedIndex]?.text || "";
+            const amount = parseFloat(amountInput.value);
+
+            if (!id || isNaN(amount) || amount <= 0) {
+                alert("Please select a valid Expense Head and enter a valid amount.");
+                return;
+            }
+
+            expenseDetails.push({ ExpenseHeadId: id, ExpenseName: name, Amount: amount });
+            amountInput.value = '';
+            headSelect.selectedIndex = 0;
+            headSelect.focus();
+            processExpenseTable();
+        }
+
+        function removeExpense(index) {
+            expenseDetails.splice(index, 1);
+            processExpenseTable();
+        }
+
+        function fetchRequisitionsByBE(beId) {
+            if (!beId || requisitionsFetched) return;
+            fetch(`/Expenses/GetRequisitionsWithNoExpense?beId=${beId}`)
+                .then(res => res.json())
+                .then(data => {
+                    const dropdown = document.getElementById("RequisitionID");
+                    dropdown.innerHTML = '<option value="">-- Select Requisition --</option>';
+
+                    data.forEach(item => {
+                        const option = document.createElement("option");
+                        option.value = item.id;
+                        option.text = `${item.employeeName} (${item.requisitionNo}) - ${parseFloat(item.amount).toFixed(2)}`;
+
+                        if (parseInt(item.id) === selectedRequisitionId) {
+                            option.selected = true;
+                            fetchRequisitionDetails(item.id);
+                        }
+
+                        dropdown.appendChild(option);
+                    });
+
+                    requisitionsFetched = true;
+                });
+        }
+
+        function fetchRequisitionDetails(id) {
+            if (!id) return;
+            fetch(`/Requisitions/GetById?id=${id}`)
+                .then(res => res.json())
+                .then(data => {
+                    Object.keys(data.requisitionDetails || {}).forEach(headId => {
+                        requisitionAmounts[headId] = data.requisitionDetails[headId];
+                    });
+                    processExpenseTable();
+                })
+                .catch(() => {
+                    console.warn("Requisition details not found");
+                });
+        }
+
+        function setupExpenseEntry() {
+            document.getElementById("addExpenseDetailButton").onclick = addExpenseDetail;
+            document.getElementById("expenseAmount").addEventListener("keydown", e => {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    addExpenseDetail();
+                    document.getElementById("expenseHeadId").focus();
+                }
+            });
+        }
+
+        function setupBESuggestions() {
+            const input = document.getElementById("BEdetailsID");
+            const box = document.getElementById("suggestionsBox");
+            const beNoField = document.getElementById("BEnumber");
+            const hiddenBE = document.getElementById("hiddenBE");
+
+            input.addEventListener("input", () => {
+                const val = input.value.trim().toLowerCase();
+                box.innerHTML = '';
+                box.style.display = 'none';
+                if (!val) return;
+
+                const matches = beList.filter(item =>
+                    item.text.toLowerCase().includes(val) || item.value.toLowerCase().includes(val)
+                ).slice(0, 5);
+
+                matches.forEach(item => {
+                    const div = document.createElement("div");
+                    div.className = "list-group-item list-group-item-action";
+                    div.textContent = item.text;
+                    div.onclick = () => {
+                        input.value = item.text;
+                        beNoField.value = item.text;
+                        hiddenBE.value = item.value;
+                        fetchRequisitionsByBE(item.value);
+                        box.style.display = "none";
+                    };
+                    box.appendChild(div);
+                });
+
+                if (matches.length) box.style.display = "block";
+            });
+
+            document.addEventListener("click", e => {
+                if (!input.contains(e.target) && !box.contains(e.target)) {
+                    box.style.display = "none";
+                }
+            });
+
+            window.addEventListener("resize", () => {
+                box.style.width = input.offsetWidth + "px";
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            setupExpenseEntry();
+            setupBESuggestions();
+            processExpenseTable();
+            const beId = document.getElementById("hiddenBE").value;
+            if (beId) {
+                fetchRequisitionsByBE(beId);
+            }
+        });
+    </script>
+}

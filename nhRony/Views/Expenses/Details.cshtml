@@ -1,69 +1,205 @@
 ﻿@model ClearingAndForwarding.Models.Expenses
 
-<div>
-    <h4>Expense Info</h4>
-    <table class="table">
-        <tr>
-            <td><strong>Employee</strong></td>
-            <td>@Model.Employee?.Name</td> <!-- Use null-conditional operator to avoid NullReferenceException -->
-        </tr>
-        <tr>
-            <td><strong>File Number</strong></td>
-            <td>@Model.FileNo</td>
-        </tr>
-        <tr>
-            <td><strong>Bill Type</strong></td>
-            <td>@Model.BillType</td>
-        </tr>
-        <tr>
-            <td><strong>Bill Amount</strong></td>
-            <td>@Model.BillAmount.ToString("N2")</td>
-        </tr>
-        <tr>
-            <td><strong>Bill Date</strong></td>
-            <td>@Model.BillDate.ToString("yyyy-MM-dd")</td>
-        </tr>
+@{
+    var quotations = ViewData["QuotationAmounts"] as List<ClearingAndForwarding.Models.Quotation> ?? new();
+    var requisitionAmounts = ViewData["RequisitionAmounts"] as Dictionary<int, decimal> ?? new();
+    var matchingExpenses = ViewData["MatchingExpenses"] as List<ClearingAndForwarding.Models.Expenses> ?? new();
+    var excludedIds = new HashSet<int> { 1, 2, 58, 59, 60 };
+
+    decimal totalRequisition = 0, totalExcluded = 0, totalAmount = 0;
+}
+
+<div class="container mt-4">
+    <!-- Expense Information -->
+    <h4>Expense Information</h4>
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <td>Employee Name</td>
+                <td>@Model.Employee?.Name</td>
+                <td>BE Number</td>
+                <td>@Model.Bedetails?.BENo</td>
+                <td>BE Date</td>
+                <td>@Model.Bedetails?.BEDate.ToString("dd-MMM-yyyy")</td>
+            </tr>
+            <tr>
+                <td>LC Number</td>
+                <td>@Model.Bedetails?.LCNo</td>
+                <td>LC Date</td>
+                <td>@Model.Bedetails?.LCDate?.ToString("dd-MMM-yyyy")</td>
+                <td>File Number</td>
+                <td>@Model.FileNo</td>
+            </tr>
+            <tr>
+                <td>Bill Type</td>
+                <td>@Model.BillType</td>
+                <td>Bill Date</td>
+                <td>@Model.BillDate.ToString("dd-MMM-yyyy")</td>
+                <td>Shipper</td>
+                <td>@Model.Bedetails?.Shipper</td>
+            </tr>
+            <tr>
+                <td>Quantity</td>
+                <td>@Model.Bedetails?.Quantity @Model.Bedetails?.UOM</td>
+                <td colspan="4"></td>
+            </tr>
+        </tbody>
     </table>
-</div>
 
-<h4>Expense Details</h4>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Expense Head</th>
-            <th>Amount</th>
-        </tr>
-    </thead>
-    <tbody>
-        @{
-            decimal totalAmount = 0;
-            var addedExpenseHeads = new HashSet<int>(); // Track added ExpenseHeads to prevent duplicates
-        }
-
-        @foreach (var detail in Model.ExpenseDetails)
-        {
-            // Skip specific ExpenseHeadId values
-            if (!new[] { 1, 2, 58, 59, 60 }.Contains(detail.ExpenseHeadId))
+    <!-- Expense Details -->
+    <h4 class="mt-4">Expense Details</h4>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Expense Head</th>
+                <th class="text-center">Quotation</th>
+                <th class="text-center">Requisition</th>
+                <th class="text-center">Excluded</th>
+                <th class="text-end">Bill</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ExpenseDetails?.Any() == true)
             {
-                if (addedExpenseHeads.Add(detail.ExpenseHeadId)) // Add returns false if already exists
+                foreach (var detail in Model.ExpenseDetails)
                 {
-                    decimal amount = detail.Amount;
-                    totalAmount += amount;
+                    var headId = detail.ExpenseHeadId;
+                    var isExcluded = excludedIds.Contains(headId);
+                    var quote = quotations.FirstOrDefault(q => q.ExpenseHeadID == headId);
+                    var reqValue = requisitionAmounts.TryGetValue(headId, out var rAmt) ? (decimal?)rAmt : null;
+
+                    decimal? quotation = null;
+                    int containerCount = Model.Bedetails?.ContainerNo ?? 1;
+                    containerCount = Math.Max(containerCount, 1);
+
+                    if (quote != null && quote.ItemName == "Per Container")
+                    {
+                        var chassis = Model.Bedetails?.OnChassis;
+                        int rest = containerCount - 1;
+
+                        quotation = chassis switch
+                        {
+                            "3" => quote.Amount + (quote.RestCont ?? 0) * rest,
+                            "2" => quote.OCFirstCont + (quote.OCRestCont ?? 0) * rest,
+                            _ => quote.Amount
+                        };
+                    }
+
+                    if (reqValue.HasValue && !isExcluded) totalRequisition += reqValue.Value;
+                    if (isExcluded) totalExcluded += detail.Amount;
+                    else totalAmount += detail.Amount;
 
                     <tr>
-                        <td>@detail.ExpenseHead?.ExpenseName</td> <!-- Use null-conditional operator -->
-                        <td>@amount.ToString("N2")</td>
+                        <td>@detail.ExpenseHead?.ExpenseName</td>
+                        <td class="text-center">@((quotation.HasValue) ? quotation.Value.ToString("N2") : "N/A")</td>
+                        <td class="text-center">@((reqValue.HasValue) ? reqValue.Value.ToString("N2") : "N/A")</td>
+                        <td class="text-center">@((isExcluded) ? detail.Amount.ToString("N2") : "—")</td>
+                        <td class="text-end">@((isExcluded) ? "—" : detail.Amount.ToString("N2"))</td>
                     </tr>
                 }
+
+                <tr class="fw-bold table-secondary">
+                    <td>Total</td>
+                    <td></td>
+                    <td class="text-center">@totalRequisition.ToString("N2")</td>
+                    <td class="text-center">@totalExcluded.ToString("N2")</td>
+                    <td class="text-end">@totalAmount.ToString("N2")</td>
+                </tr>
             }
-        }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center text-muted">No expense details available.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 
+    <!-- Matching Expenses -->
+    <h4 class="mt-4">Matching Expenses</h4>
+    @if (matchingExpenses.Any())
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Employee</th>
+                    <th>File No</th>
+                    <th>Bill Type</th>
+                    <th>Bill Date</th>
+                    <th class="text-end">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    var allExpenses = new List<Expenses> { Model };
+                    allExpenses.AddRange(matchingExpenses);
+                    decimal matchingTotal = 0m;
+                }
 
-        <tr style="font-weight: bold;">
-            <td>Total</td>
-            <td>@totalAmount.ToString("N2")</td>
-        </tr>
-    </tbody>
-</table>
+                @foreach (var expense in allExpenses)
+                {
+                    var validDetails = expense.ExpenseDetails
+                    .Where(x => !excludedIds.Contains(x.ExpenseHeadId))
+                    .ToList();
 
-<a asp-action="Index">Back to List</a>
+                    var total = validDetails.Sum(x => x.Amount);
+                    if (total > 0)
+                    {
+                        matchingTotal += total;
+
+                        <tr>
+                            <td>@expense.Employee?.Name</td>
+                            <td>@expense.FileNo</td>
+                            <td>@expense.BillType</td>
+                            <td>@expense.BillDate.ToString("dd-MMM-yyyy")</td>
+                            <td class="text-end">
+                                <a asp-action="Details" asp-route-id="@expense.Id" class="text-decoration-none">
+                                    @total.ToString("N2")
+                                </a>
+                            </td>
+                        </tr>
+                    }
+
+                    foreach (var special in expense.ExpenseDetails.Where(x => x.Amount != 0 && (x.ExpenseHeadId == 1 || x.ExpenseHeadId == 2)))
+                    {
+                        <tr>
+                            <td>@special.ExpenseHead?.ExpenseName</td>
+                            <td></td>
+                            <td>@special.ExpenseHead?.ExpenseName</td>
+                            <td>@expense.BillDate.ToString("dd-MMM-yyyy")</td>
+                            <td class="text-end">
+                                <a asp-action="Details" asp-route-id="@expense.Id" class="text-decoration-none">
+                                    @special.Amount.ToString("N2")
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+
+                <tr class="fw-bold table-secondary">
+                    <td colspan="4">Total Matching Amount</td>
+                    <td class="text-end">@matchingTotal.ToString("N2")</td>
+                </tr>
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="text-muted text-center">No matching expenses found.</p>
+    }
+
+    <!-- Action Buttons -->
+    <div class="d-flex justify-content-between mt-4">
+        <div>
+            <a asp-action="Upsert" asp-route-id="@Model.Id" class="btn btn-outline-primary me-2">Edit</a>
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">Delete</a>
+            @if (Model.BEdetailsID > 0)
+            {
+                <a asp-controller="Bedetails" asp-action="Upsert" asp-route-id="@Model.BEdetailsID" class="btn btn-outline-info">
+                    Edit BE Details
+                </a>
+            }
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+    </div>
+</div>
