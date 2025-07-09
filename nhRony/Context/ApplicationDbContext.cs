@@ -28,18 +28,33 @@ namespace ClearingAndForwarding.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Requisition>()
-                .HasMany(r => r.RequisitionDetails)
-                .WithOne(d => d.Requisition)
-                .HasForeignKey(d => d.RequisitionId)
-                .OnDelete(DeleteBehavior.Cascade);
-
+            // Requisition → RequisitionDetails (One-to-Many)
+            modelBuilder.Entity<RequisitionDetails>()
+                .HasOne(rd => rd.Requisition)
+                .WithMany(r => r.RequisitionDetails)
+                .HasForeignKey(rd => rd.RequisitionId)
+                .OnDelete(DeleteBehavior.Cascade); // Or Restrict if you prefer
+        
+            // Requisition → Expenses (One-to-One or Optional-One)
             modelBuilder.Entity<Expenses>()
-                .HasMany(r => r.ExpenseDetails)
-                .WithOne(d => d.Expense)
-                .HasForeignKey(d => d.ExpenseId)
+                .HasOne(e => e.Requisition)
+                .WithOne(r => r.Expenses)
+                .HasForeignKey<Expenses>(e => e.RequisitionID)
+                .OnDelete(DeleteBehavior.Restrict); // 👈 important to avoid cascade conflicts
+        
+            // ExpenseDetails → Expense (Many-to-One) if needed
+            modelBuilder.Entity<ExpenseDetails>()
+                .HasOne(ed => ed.Expenses)
+                .WithMany(e => e.ExpenseDetails)
+                .HasForeignKey(ed => ed.ExpensesId)
+                .OnDelete(DeleteBehavior.Cascade);
+        
+            // RequisitionDetails → ExpenseHead (Many-to-One)
+            modelBuilder.Entity<RequisitionDetails>()
+                .HasOne(rd => rd.ExpenseHead)
+                .WithMany()
+                .HasForeignKey(rd => rd.ExpenseHeadId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
-
 }
