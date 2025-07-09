@@ -44,9 +44,9 @@ namespace ClearingAndForwarding.Context
         
             // ExpenseDetails → Expense (Many-to-One) if needed
             modelBuilder.Entity<ExpenseDetails>()
-                .HasOne(ed => ed.Expenses)
+                .HasOne(ed => ed.Expense)
                 .WithMany(e => e.ExpenseDetails)
-                .HasForeignKey(ed => ed.ExpensesId)
+                .HasForeignKey(ed => ed.ExpenseId)
                 .OnDelete(DeleteBehavior.Cascade);
         
             // RequisitionDetails → ExpenseHead (Many-to-One)
